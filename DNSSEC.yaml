@@ -9,7 +9,7 @@ sudo apt -f install -y
 
 ##Step 12. Configure it as a DoH proxy
 sudo mkdir -p /etc/cloudflared
-sudo vi /etc/cloudflared/config.yml
+sudo vi /etc/cloudflared/config.yaml
 
 proxy-dns: true
 proxy-dns-port: 5053
