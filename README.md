@@ -79,7 +79,7 @@ Example:
 
 ```
 ns1.bronahid.lab → 172.16.30.34
-ns2.bronahid.lab → 172.16.30.35
+ns2.bronahid.lab → 172.16.30.40
 ```
 
 ---
@@ -175,8 +175,8 @@ zone "30.16.172.in-addr.arpa" {
 ### 5️⃣ Set up ns2 (Slave DNS)
 
 ```
-allow-transfer { 172.16.30.35; };
-also-notify { 172.16.30.35; };
+allow-transfer { 172.16.30.40; };
+also-notify { 172.16.30.40; };
 ```
 
 On ns2:
@@ -288,4 +288,5 @@ If you want, I can also generate:
 ✅ **setup scripts** (`install.sh`, `deploy.sh`)
 
 Just tell me!
+
 
