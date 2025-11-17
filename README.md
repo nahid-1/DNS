@@ -1,9 +1,6 @@
-﻿Here is a clean, professional **README.md** for your DNS project (BIND9 + DoH + Nginx + Redundant Nameservers).
-You can copy-paste this directly into GitHub.
 
----
 
-# 📘 **bronahid.lab – DNS Infrastructure Setup (BIND9 + Redundant NS + DoH + Nginx)**
+📘 **bronahid.lab – DNS Infrastructure Setup (BIND9 + Redundant NS + DoH + Nginx)**
 
 This repository contains configuration files and documentation for deploying a **production-ready DNS infrastructure** on Ubuntu 22.04 LTS using:
 
@@ -281,12 +278,6 @@ This project is licensed under the MIT License.
 
 ---
 
-If you want, I can also generate:
 
-✅ A **diagram (PNG)**
-✅ A **full documentation PDF**
-✅ **setup scripts** (`install.sh`, `deploy.sh`)
-
-Just tell me!
 
 
