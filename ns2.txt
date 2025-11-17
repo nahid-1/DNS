@@ -1,0 +1,8 @@
+⚙️ PHASE 3 – CONFIGURE SECONDARY DNS (ns2)
+
+On your ns2 (172.16.30.40):
+
+Step 7. Edit /etc/bind/named.conf.local
+Restart BIND9:
+✅ The zone files will auto-transfer from ns1 to ns2.
+You should see db.bronahid.lab and db.172.16.30.

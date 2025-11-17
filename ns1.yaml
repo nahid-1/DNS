@@ -1,0 +1,70 @@
+sudo vi /etc/bind/named.conf.options
+
+options {
+        directory "/var/cache/bind";
+
+        recursion yes;
+        allow-query { any; };
+        allow-transfer { 172.16.30.35; };   // allow zone transfer to ns2
+
+        forwarders {
+                8.8.8.8;
+                8.8.4.4;
+        };
+
+        dnssec-validation yes;
+        listen-on { any; };
+        listen-on-v6 { any; };
+};
+
+##Step 3. Define your zones in /etc/bind/named.conf.local
+sudo vi /etc/bind/named.conf.local
+
+zone "bronahid.lab" {
+    type master;
+    file "/etc/bind/db.bronahid.lab";
+    allow-transfer { 172.16.30.40; };
+};
+
+zone "30.16.172.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.172.16.30";
+    allow-transfer { 172.16.30.40; };
+};
+
+##Step 4. Create the forward zone file
+sudo cp /etc/bind/db.local /etc/bind/db.bronahid.lab
+sudo vi /etc/bind/db.bronahid.lab
+
+;
+; Zone file for bronahid.lab
+;
+$TTL 604800
+@       IN      SOA     ns1.bronahid.lab. admin.bronahid.lab. (
+                        2025110201 ; Serial
+                        604800     ; Refresh
+                        86400      ; Retry
+                        2419200    ; Expire
+                        604800 )   ; Negative Cache TTL
+;
+@       IN      NS      ns1.bronahid.lab.
+@       IN      NS      ns2.bronahid.lab.
+ns1     IN      A       172.16.30.34
+ns2     IN      A       172.16.30.40
+www     IN      A       172.16.30.73
+@       IN      A       172.16.30.73
+@       IN      MX 10   mail.bronahid.lab.
+mail    IN      A       172.16.30.73
+##Step 6. Restart and verify
+sudo systemctl restart bind9
+sudo named-checkconf
+sudo named-checkzone bronahid.lab /etc/bind/db.bronahid.lab
+sudo named-checkzone 30.16.172.in-addr.arpa /etc/bind/db.172.16.30
+sudo systemctl status bind9
+
+##🧾 PHASE 4 – ADD A GLUE RECORD
+
+# On your ns1 
+ns1.bronahid.lab.   A   172.16.30.34
+ns2.bronahid.lab.   A   172.16.30.35
+

@@ -1,0 +1,95 @@
+##Step 8. Install Nginx on the web server (172.16.30.73)
+
+sudo apt install -y nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
+##Step 9. Create your web app directory
+sudo mkdir -p /var/www/bronahid.lab/html
+sudo chown -R $USER:$USER /var/www/bronahid.lab/html
+sudo chmod -R 755 /var/www/bronahid.lab
+
+echo "<h1>Welcome to bronahid.lab</h1>" | sudo tee /var/www/bronahid.lab/html/index.html
+
+
+######################extenstions###########################
+
+
+##Step 10. Create a sample index.html file
+cat <<EOF | sudo tee /var/www/bronahid.lab/html/index.html  
+<!DOCTYPE html>
+<html>    
+<head>
+    <title>Welcome to bronahid.lab!</title>
+</head>
+<body>
+    <h1>Success! The bronahid.lab web server is working!</h1>
+</body>
+</html>
+EOF
+
+##Step 11. Create Nginx server block configuration
+sudo vi /etc/nginx/sites-available/bronahid.lab
+# Add the following content:
+# server {  
+#     listen 80;
+#     server_name bronahid.lab www.bronahid.lab;
+#     root /var/www/bronahid.lab/html;
+#     index index.html;
+#     location / {
+#         try_files $uri $uri/ =404;
+#     }
+# }
+##Step 12. Enable the server block
+sudo ln -s /etc/nginx/sites-available/bronahid.lab /etc/nginx/sites-enabled/
+##Step 13. Test Nginx configuration and restart
+sudo nginx -t
+sudo systemctl restart nginx
+##Step 14. Verify web server functionality
+curl http://bronahid.lab
+curl http://www.bronahid.lab
+##✅ You should see the sample HTML content displayed.
+##🛠️ PHASE 6 – MAIL SERVER (Postfix & Dovecot
+##Step 15. Install Postfix and Dovecot
+sudo apt install -y postfix dovecot-core dovecot-imapd
+##Step 16. Configure Postfix
+sudo vi /etc/postfix/main.cf
+# Set the following parameters:
+# myhostname = mail.bronahid.lab
+# mydomain = bronahid.lab
+# myorigin = /etc/mailname
+# inet_interfaces = all
+# mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+# relay_domains =
+# home_mailbox = Maildir/
+# smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu
+##Step 17. Configure Dovecot
+sudo vi /etc/dovecot/dovecot.conf
+# Add or uncomment the following line:
+# mail_location = maildir:~/Maildir
+sudo vi /etc/dovecot/conf.d/10-auth.conf
+# Uncomment the following line:
+# disable_plaintext_auth = no
+sudo vi /etc/dovecot/conf.d/10-mail.conf
+# Ensure the following line is set:
+# mail_location = maildir:~/Maildir
+sudo vi /etc/dovecot/conf.d/10-master.conf
+# Ensure the service imap-login section looks like this:
+# service imap-login {
+#   inet_listener imap {
+#     port = 143
+#   }
+# }
+##Step 18. Restart Postfix and Dovecot
+sudo systemctl restart postfix
+sudo systemctl restart dovecot
+##Step 19. Verify mail server functionality
+echo "Test email from bronahid.lab" | mail -s "Test Email"
+  
+  ##✅ Check the mail log for delivery status:
+  sudo tail -f /var/log/mail.log
+  ##✅ You can use an email client to connect via IMAP to verify email receipt.
+  ##✅ You have successfully set up a web and mail server for bronahid.lab!
+    
+
+

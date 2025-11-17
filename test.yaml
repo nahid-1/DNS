@@ -1,0 +1,19 @@
+##🧠 PHASE 7 – TEST EVERYTHING
+On any client VM:
+
+Set DNS resolver:
+
+sudo vi /etc/resolv.conf
+nameserver 172.16.30.34
+
+dig bronahid.lab
+dig www.bronahid.lab
+dig -x 172.16.30.40
+dig mail.bronahid.lab
+curl http://bronahid.lab  
+
+##You should see:
+
+##ANSWER SECTION from ns1.bronahid.lab
+
+##AUTHORITY SECTION listing ns1 & ns2

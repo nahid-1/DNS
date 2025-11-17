@@ -1,0 +1,46 @@
+##Step 11. Install cloudflared (recommended)
+sudo apt install -y cloudflared
+##Step 12. Configure it as a DoH proxy
+sudo mkdir -p /etc/cloudflared
+sudo vi /etc/cloudflared/config.yml
+
+proxy-dns: true
+proxy-dns-port: 5053
+proxy-dns-upstream:
+ - https://cloudflare-dns.com/dns-query
+ - https://dns.google/dns-query
+
+##Enable the service:
+sudo systemctl enable cloudflared
+sudo systemctl start cloudflared
+
+##Step 13. Integrate with BIND9
+sudo vi /etc/bind/named.conf.options
+
+forwarders {
+    127.0.0.1 port 5053;
+};
+##Step 14. Restart BIND9
+sudo systemctl restart bind9
+##✅ Test DNS resolution using DoH
+dig @172.16.30.34 www.bronahid.lab
+dig @172.16.30.73 mail.bronahid.lab
+
+##✅ You should see correct DNS responses.
+##✅ Now your DNS server forwards queries through DoH, providing privacy & authenticity.
+
+##🔐 Step 15: Enable DNS over HTTPS (DoH) via Nginx
+sudo apt install dnsdist -y
+sudo vi /etc/dnsdist/dnsdist.conf
+
+addLocal('127.0.0.1:53')
+addDOHLocal('0.0.0.0:443', '/etc/letsencrypt/live/bronahid.lab/fullchain.pem', '/etc/letsencrypt/live/bronahid.lab/privkey.pem')
+newServer({address='127.0.0.1:53', name='localdns'})
+setServerPolicy(firstAvailable)
+
+##Restart dnsdist
+sudo systemctl restart dnsdist  
+##✅ Test DoH via Nginx
+dig @172.16.30.34 www.bronahid.lab +https=https://bronahid.lab/dns-query
+dig @172.16.30.73 mail.bronahid.lab +https=https://bronahid.lab/dns-query 
+##✅ You should see correct DNS responses over HTTPS.

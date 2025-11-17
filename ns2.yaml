@@ -1,0 +1,30 @@
+
+
+##Step 7. Edit /etc/bind/named.conf.local
+sudo vi /etc/bind/named.conf.local
+
+zone "bronahid.lab" {
+    type slave;
+    masters { 172.16.30.34; };
+    file "/var/lib/bind/db.bronahid.lab";
+};
+
+zone "30.16.172.in-addr.arpa" {
+    type slave;
+    masters { 172.16.30.34; };
+    file "/var/lib/bind/db.172.16.30";
+};
+##Restart BIND9:
+sudo systemctl restart bind9
+#✅ The zone files will auto-transfer from ns1 to ns2.
+#✅ Verify the slave zones:
+sudo named-checkzone bronahid.lab /var/lib/bind/db.bronahid.lab
+sudo named-checkzone 30.16.172.in-addr.arpa /var/lib/bind/db.172.16.30
+sudo systemctl status bind9 
+#✅ Test DNS resolution from ns2:
+dig @172.16.30.73 www.bronahid.lab
+dig @172.16.30.73 mail.bronahid.lab
+dig @172.16.30.34 www.bronahid.lab
+
+
+

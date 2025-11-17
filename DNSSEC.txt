@@ -1,0 +1,8 @@
+🔐 PHASE 6 – ADD DoH (DNS over HTTPS)
+
+DoH adds encryption to DNS queries to protect privacy and integrity.
+We can use cloudflared (Cloudflare’s DoH proxy) or dnscrypt-proxy.
+
+Step 11. Install cloudflared (recommended)
+Step 12. Configure it as a DoH proxy
+Step 13. Integrate with BIND9

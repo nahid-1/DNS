@@ -1,0 +1,3 @@
+
+🌐 PHASE 5 – WEB SERVER (Nginx)
+Step 8. Install Nginx on the web server (172.16.30.73)
