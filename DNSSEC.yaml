@@ -1,5 +1,12 @@
-##Step 11. Install cloudflared (recommended)
-sudo apt install -y cloudflared
+# Download the cloudflared .deb package
+wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+
+# Install it
+sudo dpkg -i cloudflared-linux-amd64.deb
+
+# Fix dependencies if needed
+sudo apt -f install -y
+
 ##Step 12. Configure it as a DoH proxy
 sudo mkdir -p /etc/cloudflared
 sudo vi /etc/cloudflared/config.yml
